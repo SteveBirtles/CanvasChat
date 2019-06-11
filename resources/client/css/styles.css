@@ -1,0 +1,39 @@
+body {
+    background-color: navy;
+}
+
+h1 {
+    font-weight: bold;
+    font-family: 'Open Sans';
+    color: blue;
+    text-align: center;
+    text-shadow: 2px 2px 8px grey;
+}
+
+h2 {
+    font-weight: bold;
+    font-family: 'Open Sans';
+    color: grey;
+    text-shadow: 2px 2px 4px silver;
+    text-align: center;
+}
+
+
+.content {
+    background-color: white;
+    min-width: 1024px;
+    max-width: 1024px;
+    margin: auto;
+    padding: 20px;
+}
+
+#canvas {
+    width: 1024px;
+    height: 768px;
+    background-color: silver;
+}
+
+#textToSay {
+    width: 1024px;
+    font-size: 14pt;
+}

@@ -26,7 +26,7 @@ public class Avatar {
         long lastSeen;
     }
 
-    private static ArrayList<AvatarModel> avatars = new ArrayList<>();
+    private static final ArrayList<AvatarModel> avatars = new ArrayList<>();
 
     @GET
     @Path("list")
@@ -40,7 +40,9 @@ public class Avatar {
             if (a.lastSeen < System.currentTimeMillis() - 30000) continue;
 
             if (System.currentTimeMillis() > a.chatExpiry) {
-                a.chatText = "";
+                synchronized (avatars) {
+                    a.chatText = "";
+                }
             }
 
             JSONObject o = new JSONObject();
@@ -68,7 +70,10 @@ public class Avatar {
         a.y = rnd.nextInt(MAX_Y);
         a.image = (rnd.nextInt(43) + 1) + ".png";
         a.lastSeen = System.currentTimeMillis();
-        avatars.add(a);
+
+        synchronized (avatars) {
+            avatars.add(a);
+        }
 
         return "{\"status\": \"OK\", \"id\":" + a.id + "}";
     }
@@ -85,9 +90,11 @@ public class Avatar {
                 if (y < 0) y = 0;
                 if (x > MAX_X - 1) x = MAX_X - 1;
                 if (y > MAX_Y - 1) y = MAX_Y - 1;
-                a.x = x;
-                a.y = y;
-                a.lastSeen = System.currentTimeMillis();
+                synchronized (avatars) {
+                    a.x = x;
+                    a.y = y;
+                    a.lastSeen = System.currentTimeMillis();
+                }
                 return "{\"status\": \"OK\"}";
             }
         }
@@ -104,9 +111,11 @@ public class Avatar {
 
         for (AvatarModel a: avatars) {
             if (a.id == id) {
-                a.chatText = text;
-                a.chatExpiry = System.currentTimeMillis() + 5000; // 5 seconds in the future!
-                a.lastSeen = System.currentTimeMillis();
+                synchronized (avatars) {
+                    a.chatText = text;
+                    a.chatExpiry = System.currentTimeMillis() + 5000; // 5 seconds in the future!
+                    a.lastSeen = System.currentTimeMillis();
+                }
                 return "{\"status\": \"OK\"}";
             }
         }

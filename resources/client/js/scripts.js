@@ -71,9 +71,11 @@ function drawCanvas() {
 
   }
 
-
 }
 
+/*-------------------------------------------------------
+
+------------------------------------------------------*/
 function updateAvatars() {
 
   fetch('/avatar/list', {method: 'get'},
@@ -124,27 +126,10 @@ function updateAvatars() {
 
 }
 
-function checkSpeaking(event) {
-
-  if ( event.key === "Enter" ) {
-
-    let formData = new FormData();
-    formData.append("id", myId);
-    formData.append("text", document.getElementById("textToSay").value);
-    document.getElementById("textToSay").value = "";
-
-    fetch('/avatar/speak', {method: 'post', body: formData},
-    ).then(response => response.json()
-    ).then(data => {
-          if (data.hasOwnProperty('error')) {
-            alert(data.error);
-          }
-        }
-    );
-  }
-
-}
-
+/*-------------------------------------------------------
+This function processes any key presses and changes the
+avatar's target position accordingly.
+------------------------------------------------------*/
 function checkKeyPress(event) {
 
   let me;
@@ -191,3 +176,25 @@ function checkKeyPress(event) {
 
 }
 
+/*-------------------------------------------------------
+------------------------------------------------------*/
+function checkSpeaking(event) {
+
+  if ( event.key === "Enter" ) {
+
+    let formData = new FormData();
+    formData.append("id", myId);
+    formData.append("text", document.getElementById("textToSay").value);
+    document.getElementById("textToSay").value = "";
+
+    fetch('/avatar/speak', {method: 'post', body: formData},
+    ).then(response => response.json()
+    ).then(data => {
+          if (data.hasOwnProperty('error')) {
+            alert(data.error);
+          }
+        }
+    );
+  }
+
+}

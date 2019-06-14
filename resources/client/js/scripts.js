@@ -1,27 +1,41 @@
-let myId = 0;
-let avatars = [];
+let myId = 0;       // This stores the client's id, as retrieved from the server. Each avatar has a unique id.
+let avatars = [];   // This data structure stores all the avatars that are currently known, populated with data from the server.
 
+/*-------------------------------------------------------
+This function runs when the page first loads. Look for
+the line <body onload="pageLoad()"> in the HTML file.
+------------------------------------------------------*/
 function pageLoad() {
 
-  fetch('/avatar/new', {method: 'post'},
+  fetch('/avatar/new', {method: 'post'},    // Do a HTTP POST request to /avatar/new to create a new avatar.
   ).then(response => response.json()
   ).then(data => {
-        if (data.hasOwnProperty('error')) {
-          alert(data.error);
-        } else {
-          myId = data.id;
-          setInterval(drawCanvas, 20);
-          setInterval(updateAvatars, 150);
-          document.addEventListener("keydown", checkKeyPress, false);
-          document.getElementById("textToSay").addEventListener("keydown", checkSpeaking, false);
+        if (data.hasOwnProperty('error')) {     // Error checking - do an alert box if something went wrong.
 
-          document.getElementById("textToSay").focus();
+          alert(data.error);
+
+        } else {                                   // If nothing went wrong then...
+
+          myId = data.id;                              // Set the client's id variable using the id from the response data.
+
+          setInterval(drawCanvas, 20);         // Set the drawCanvas function to run 50 times per second (once every 20ms)
+          setInterval(updateAvatars, 167);     // Set the updateAvatars function to run about 6 times per second (once every 167ms)
+
+          document.addEventListener("keydown", checkKeyPress);     // Set the checkKeyPress function to handle any key press events (for the arrow keys)
+
+          document.getElementById("textToSay").addEventListener("keydown", checkSpeaking);    // The checkSpeaking function will be listening out
+                                                                                                             // for when the enter key is pressed to 'speak' some text
+          document.getElementById("textToSay").focus();       // Set the input text box to be the focused element of the page straight away (ready to type text)
         }
       }
   );
 
 }
 
+/*-------------------------------------------------------
+This function redraws the canvas, creating one 'frame'
+of the game's animation. It is called 50 times per second.
+------------------------------------------------------*/
 function drawCanvas() {
 
   let canvasContext = document.getElementById('canvas').getContext('2d');
